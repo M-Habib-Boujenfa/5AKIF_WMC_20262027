@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de la Boutique</title>
+
+</head>
+
+<body style="font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px;">
+
+    <h1>Gestion de la Boutique</h1>
+
+
+    <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ddd;">
+        <h2>Ajouter un article</h2>
+        <form id="articleForm">
+            <div style="margin-bottom: 10px;">
+                <input type="text" id="title" placeholder="Nom de l'article" required
+                    style="width: 100%; padding: 8px; box-sizing: border-box;">
+            </div>
+            <div style="margin-bottom: 10px;">
+                <input type="number" id="price" placeholder="Prix (en centimes, ex: 1500 pour 15€)" required
+                    style="width: 100%; padding: 8px; box-sizing: border-box;">
+            </div>
+            <div style="margin-bottom: 10px;">
+                <textarea id="description" placeholder="Description"
+                    style="width: 100%; padding: 8px; box-sizing: border-box;"></textarea>
+            </div>
+            <button type="submit"
+                style="background: #0066cc; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%;">Ajouter
+                l'article</button>
+        </form>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h2>Liste des articles</h2>
+        <button id="deleteAllBtn"
+            style="background: #dc3545; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">Tout
+            supprimer</button>
+    </div>
+    <div id="articlesList">
+        <p>Chargement des articles...</p>
+    </div>
+
+
+
+
+    <script type="module" src="./script.js"></script>
+</body>
+
+</html>
