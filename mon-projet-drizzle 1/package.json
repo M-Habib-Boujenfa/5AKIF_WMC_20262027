@@ -1,0 +1,22 @@
+{
+  "name": "mon-projet-drizzle-1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@libsql/client": "^0.18.0",
+    "dotenv": "^18.0.9",
+    "drizzle-orm": "^1.0.0-rc.5"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^1.0.0-rc.5",
+    "tsx": "^4.23.15"
+  }
+}
