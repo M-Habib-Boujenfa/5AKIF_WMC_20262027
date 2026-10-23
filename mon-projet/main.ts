@@ -1,7 +1,4 @@
-import { drizzle } from "drizzle-orm/sqlite-proxy";
 import { Database } from "@db/sqlite";
-import * as schema from "./db/schema.ts";
-import { articles } from "./db/schema.ts";
 
 // Initialisation de la base SQLite et création automatique de la table si absente
 const sqlite = new Database("sqlite.db");
@@ -14,35 +11,14 @@ sqlite.exec(`
   );
 `);
 
-export const db = drizzle(
-  async (sql, params, method) => {
-    try {
-      const stmt = sqlite.prepare(sql);
-      if (method === "all") {
-        return { rows: stmt.all(...params) };
-      } else if (method === "run") {
-        stmt.run(...params);
-        return { rows: [] };
-      } else if (method === "get") {
-        const row = stmt.get(...params);
-        return { rows: row ? [row] : [] };
-      }
-      return { rows: [] };
-    } catch (e) {
-      console.error("Erreur Drizzle:", e);
-      throw e;
-    }
-  },
-  { schema }
-);
-
 Deno.serve({ port: 3000 }, async (req) => {
   const url = new URL(req.url);
 
   // --- API GET : Récupérer tous les articles ---
   if (req.method === "GET" && url.pathname === "/api/articles") {
     try {
-      const allArticles = db.select().from(articles).all();
+      const stmt = sqlite.prepare("SELECT * FROM articles");
+      const allArticles = stmt.all();
       return Response.json(allArticles);
     } catch (error) {
       console.error("Erreur GET /api/articles:", error);
@@ -55,12 +31,10 @@ Deno.serve({ port: 3000 }, async (req) => {
     try {
       const body = await req.json();
       
-      // Insertion en base avec exécution .run()
-      db.insert(articles).values({
-        title: body.title,
-        price: Number(body.price),
-        description: body.description || "",
-      }).run();
+      const stmt = sqlite.prepare(
+        "INSERT INTO articles (title, price, description) VALUES (?, ?, ?)"
+      );
+      stmt.run(body.title, Number(body.price), body.description || "");
 
       return Response.json({ success: true, message: "Article ajouté avec succès !" });
     } catch (error) {

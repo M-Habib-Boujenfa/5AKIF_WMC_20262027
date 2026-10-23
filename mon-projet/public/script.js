@@ -6,6 +6,8 @@ async function fetchArticles() {
   try {
     const response = await fetch("/api/articles");
     const data = await response.json();
+    console.log("Données reçues de l'API :", data); // Pour voir la structure exacte dans la console
+
     const articles = Array.isArray(data) ? data : (data.articles || []);
 
     if (articles.length === 0) {
@@ -17,9 +19,9 @@ async function fetchArticles() {
       .map(
         (art) => `
         <div class="article-card" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 5px; background: #fff;">
-          <h3>${art.title}</h3>
-          <p><strong>Prix :</strong> ${(art.price / 100).toFixed(2)} €</p>
-          <p>${art.description || "Pas de description"}</p>
+          <h3>${art.title || art.TITLE || 'Sans titre'}</h3>
+          <p><strong>Prix :</strong> ${((art.price ?? art.PRICE ?? 0) / 100).toFixed(2)} €</p>
+          <p>${art.description || art.DESCRIPTION || "Pas de description"}</p>
         </div>
       `
       )
