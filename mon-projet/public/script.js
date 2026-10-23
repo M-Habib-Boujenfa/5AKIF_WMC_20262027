@@ -58,5 +58,25 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
+const deleteAllBtn = document.getElementById("deleteAllBtn");
+
+deleteAllBtn.addEventListener("click", async () => {
+  if (!confirm("Êtes-vous sûr de vouloir supprimer tous les articles ?")) return;
+
+  try {
+    const response = await fetch("/api/articles", {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      fetchArticles(); // Recharge la liste (qui sera vide)
+    } else {
+      alert("Erreur lors de la suppression.");
+    }
+  } catch (error) {
+    console.error("Erreur réseau:", error);
+  }
+});
+
 // Charger les articles au démarrage de la page
 fetchArticles();

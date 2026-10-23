@@ -11,11 +11,11 @@ sqlite.exec(`
   );
 `);
 
-Deno.serve({ port: 3000 }, async (req) => {
-  const url = new URL(req.url);
+Deno.serve({ port: 3000 }, async (req: Request): Promise<Response> => {
+  const requestUrl = new URL(req.url);
 
   // --- API GET : Récupérer tous les articles ---
-  if (req.method === "GET" && url.pathname === "/api/articles") {
+  if (req.method === "GET" && requestUrl.pathname === "/api/articles") {
     try {
       const stmt = sqlite.prepare("SELECT * FROM articles");
       const allArticles = stmt.all();
@@ -27,7 +27,7 @@ Deno.serve({ port: 3000 }, async (req) => {
   }
 
   // --- API POST : Ajouter un article ---
-  if (req.method === "POST" && url.pathname === "/api/articles") {
+  if (req.method === "POST" && requestUrl.pathname === "/api/articles") {
     try {
       const body = await req.json();
       
@@ -43,8 +43,20 @@ Deno.serve({ port: 3000 }, async (req) => {
     }
   }
 
+  // --- API DELETE : Supprimer tous les articles ---
+  if (req.method === "DELETE" && requestUrl.pathname === "/api/articles") {
+    try {
+      const stmt = sqlite.prepare("DELETE FROM articles");
+      stmt.run();
+      return Response.json({ success: true, message: "Tous les articles ont été supprimés !" });
+    } catch (error) {
+      console.error("Erreur DELETE /api/articles:", error);
+      return Response.json({ success: false, error: "Erreur lors de la suppression" }, { status: 500 });
+    }
+  }
+
   // --- SERVIR LES FICHIERS STATIQUES (HTML, JS, CSS) ---
-  let filePath = url.pathname === "/" ? "/index.html" : url.pathname;
+  let filePath = requestUrl.pathname === "/" ? "/index.html" : requestUrl.pathname;
   try {
     const fileContent = await Deno.readFile(`./public${filePath}`);
     let contentType = "text/html";
