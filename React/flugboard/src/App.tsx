@@ -109,6 +109,7 @@ function App() {
                 <th>Airline</th>
                 <th>Ziel</th>
                 <th>Zeit</th>
+                <th>Terminal</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -118,6 +119,7 @@ function App() {
                 <td>Emirates</td>
                 <td>Dubai</td>
                 <td>09:45</td>
+                <td>Noch nicht</td>
                 <td>
                   <span className="status-badge status-boarding">
                     Boarding
@@ -130,6 +132,7 @@ function App() {
                 <td>Turkish Airlines</td>
                 <td>Istanbul</td>
                 <td>13:20</td>
+                <td>Noch nicht</td>
                 <td>
                   <span className="status-badge status-delayed">
                     Verspätet
@@ -142,6 +145,7 @@ function App() {
                 <td>Wizz Air</td>
                 <td>Budapest</td>
                 <td>15:30</td>
+                <td>Noch nicht</td>
                 <td>
                   <span className="status-badge status-on-time">
                     Pünktlich
