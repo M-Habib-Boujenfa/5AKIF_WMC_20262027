@@ -1,0 +1,8 @@
+.flight-row-cell {
+  border-bottom: 1px solid #30363d;
+  padding: 0.7rem 1rem;
+}
+
+.status {
+  background-color: green;
+}
