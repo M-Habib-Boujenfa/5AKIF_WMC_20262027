@@ -1,0 +1,22 @@
+/* src/components/Header.css */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+.header-stats {
+  display: flex;
+  gap: 1.5rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.stat-gold {
+  color: #fde047; /* Jaune doré */
+}

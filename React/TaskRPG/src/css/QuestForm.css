@@ -1,0 +1,48 @@
+/* src/components/QuestForm.css */
+.quest-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background-color: #0f172a;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  margin-top: 2rem;
+}
+
+.quest-form label {
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+.quest-form input {
+  padding: 0.75rem;
+  border-radius: 4px;
+  border: 1px solid #475569;
+  background-color: #1e293b;
+  color: white;
+  font-size: 1rem;
+}
+
+.quest-form input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.submit-btn {
+  background-color: #8b5cf6; /* Violet magique */
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+  background-color: #7c3aed;
+}
