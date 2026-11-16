@@ -1,82 +1,91 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
+import "./css/App.css";
 import Header from "./components/Header.tsx";
 import QuestList from "./components/QuestList.tsx";
-import type { Quest, User } from "./types.ts";
-import "./css/App.css";
-import axios from "axios";
-
 import QuestForm from "./components/QuestForm.tsx";
+import type { Quest, User } from "./types.ts";
 
 function App() {
-  const [user, setUser] = useState<User>(
-    {
-      name: "Hero",
-      level: 3,
-      or: 0,
-    },
-  );
+  const [user, setUser] = useState<User>({
+    name: "Chargement...",
+    level: 3,
+    gold: 0,
+  });
 
-  const [quests, setQuests] = useState<Quest[]>(
-    [
-      {
-        id: 1,
-        title: "Begin React project",
-        value: 10,
-        completed: false,
-      },
-      {
-        id: 2,
-        title: "learn how to use useState",
-        value: 20,
-        completed: false,
-      },
-      {
-        id: 3,
-        title: "try to add a form for the quest",
-        value: 30,
-        completed: false,
-      },
-      {
-        id: 4,
-        title: "Banging my head against the wall",
-        value: 40,
-        completed: false,
-      },
-    ],
-  );
+  const [quests, setQuests] = useState<Quest[]>([]);
 
+  // 1. Initialisation des données au démarrage + API nom aléatoire si besoin
   useEffect(() => {
-    axios.get("https://randomuser.me/api/")
-      .then((response) => {
-        const firstName = response.data.results[0].name.first;
-        const lastName = response.data.results[0].name.last;
-        setUser((prevUser) => ({
-          ...prevUser,
-          name: `Hero ${firstName} ${lastName}`,
-        }));
-      });
+    const fetchAppData = async () => {
+      try {
+        const userResponse = await axios.get("http://localhost:3000/api/user");
+        let currentUser = userResponse.data;
+
+        // Si le nom par défaut est "Hero", on génère un nom stylé via l'API externe
+        if (currentUser.name === "Hero" || !currentUser.name) {
+          const randomUserRes = await axios.get("https://randomuser.me/api/");
+          const firstName = randomUserRes.data.results[0].name.first;
+          const lastName = randomUserRes.data.results[0].name.last;
+          const newHeroName = `Hero ${firstName} ${lastName}`;
+
+          await axios.patch("http://localhost:3000/api/user/name", {
+            name: newHeroName,
+          });
+          currentUser = { ...currentUser, name: newHeroName };
+        }
+
+        setUser(currentUser);
+
+        const questsResponse = await axios.get(
+          "http://localhost:3000/api/quests",
+        );
+        setQuests(questsResponse.data);
+      } catch (error) {
+        console.error("Erreur lors du chargement des données :", error);
+      }
+    };
+
+    fetchAppData();
   }, []);
 
-  const handleCompleteQuest = (id: number) => {
-    const clikedQuest: Quest = quests.find((quest) => quest.id == id);
-    const questGoldValue = clikedQuest?.value ?? 0;
-    setUser({ ...user, or: user.or + questGoldValue });
+  // 2. Valider une quête
+  const handleCompleteQuest = async (id: number) => {
+    const clickedQuest = quests.find((quest) => quest.id === id);
+    if (!clickedQuest || clickedQuest.completed) return;
 
-    setQuests(
-      quests.map((quest) =>
-        quest.id == id ? { ...quest, completed: true } : { ...quest }
-      ),
-    );
+    const newGold = user.gold + clickedQuest.value;
+
+    try {
+      await axios.patch("http://localhost:3000/api/user/gold", {
+        gold: newGold,
+      });
+      await axios.patch(`http://localhost:3000/api/quests/${id}/complete`);
+
+      setUser((prevUser: User) => ({ ...prevUser, gold: newGold }));
+      setQuests(
+        quests.map((quest) =>
+          quest.id === id ? ({ ...quest, completed: true }) : quest
+        ),
+      );
+    } catch (error) {
+      console.error("Erreur lors de la validation de la quête :", error);
+    }
   };
 
-  const handleAddQuest = (title: string, gold: number) => {
-    const newQuest: Quest = {
-      id: quests.length > 0 ? quests[quests.length - 1].id + 1 : 1,
-      title: title,
-      value: gold,
-      completed: false,
-    };
-    setQuests([...quests, newQuest]);
+  // 3. Ajouter une quête
+  const handleAddQuest = async (title: string, gold: number) => {
+    try {
+      const response = await axios.post("http://localhost:3000/api/quests", {
+        title,
+        value: gold,
+      });
+
+      const newQuest: Quest = response.data;
+      setQuests([...quests, newQuest]);
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de la quête :", error);
+    }
   };
 
   return (

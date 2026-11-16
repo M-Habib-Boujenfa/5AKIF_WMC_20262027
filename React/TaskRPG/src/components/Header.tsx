@@ -10,7 +10,7 @@ function Header({ user }: HeaderProps) {
         <header className="header-container">
             <h1>{user.name}</h1>
             <div className="header-stats">
-                <p className="stat-gold">🪙 {user.or} Or</p>
+                <p className="stat-gold">🪙 {user.gold} Or</p>
             </div>
         </header>
     );

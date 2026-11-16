@@ -6,7 +6,8 @@ export interface Quest {
 }
 
 export interface User {
+  id? : number,
   name: string;
   level: number;
-  or: number;
+  gold: number;
 }
