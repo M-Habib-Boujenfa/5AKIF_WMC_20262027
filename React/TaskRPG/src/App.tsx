@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/Header.tsx";
 import QuestList from "./components/QuestList.tsx";
 import type { Quest, User } from "./types.ts";
 import "./css/App.css";
+import axios from "axios";
 
 import QuestForm from "./components/QuestForm.tsx";
 
@@ -31,12 +32,30 @@ function App() {
       },
       {
         id: 3,
-        title: "Banging my head against the wall",
+        title: "try to add a form for the quest",
         value: 30,
+        completed: false,
+      },
+      {
+        id: 4,
+        title: "Banging my head against the wall",
+        value: 40,
         completed: false,
       },
     ],
   );
+
+  useEffect(() => {
+    axios.get("https://randomuser.me/api/")
+      .then((response) => {
+        const firstName = response.data.results[0].name.first;
+        const lastName = response.data.results[0].name.last;
+        setUser((prevUser) => ({
+          ...prevUser,
+          name: `Hero ${firstName} ${lastName}`,
+        }));
+      });
+  }, []);
 
   const handleCompleteQuest = (id: number) => {
     const clikedQuest: Quest = quests.find((quest) => quest.id == id);
